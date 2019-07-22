@@ -1,7 +1,7 @@
 FROM centos:7
 # Basic MPI development tools
-RUN yum -y install gsl-devel openmpi-devel libgfortran gmp-devel zsh openssl-devel perf autoconf build-essential ca-certificates coreutils curl environment-modules git python unzip vim 
-RUN yum -y group install "Development Tools"
+RUN yum -y install gsl-devel openmpi3-devel libgfortran gmp-devel zsh openssl-devel perf autoconf ca-certificates coreutils curl environment-modules git python unzip vim 
+RUN yum -y groupinstall "Development Tools"
 # Infiniband goodies
 RUN yum -y install dapl dapl-utils ibacm infiniband-diags libibverbs libibverbs-devel libibverbs-utils libmlx4 librdmacm librdmacm-utils mstflint opensm-libs perftest qperf rdma
 RUN ln -s /usr/lib64/openmpi/bin/* /usr/bin/
