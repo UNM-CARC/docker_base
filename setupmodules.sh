@@ -1,2 +1,2 @@
 #!/bin/bash
-module add openmpi3
+module add mpi/openmpi3-x86_64
