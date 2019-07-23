@@ -8,9 +8,10 @@ RUN yum -y install dapl dapl-utils ibacm infiniband-diags libibverbs libibverbs-
 
 # Install SCL tools for managing python versions and a script to always enable them when we start
 RUN yum -y install centos-release-scl
-RUN yum -y install rh-python36 rh-python36-numpy autotools-latest
-RUN echo "source scl_source enable rh-python36
-source scl_source enable autotools-latest" >> /etc/profile.d/sh.local
+RUN yum -y install rh-python36 rh-python36-numpy 
+#autotools-latest
+RUN echo "source scl_source enable rh-python36" >> /etc/profile.d/sh.local
+#RUN echo "source scl_source enable autotools-latest" >> /etc/profile.d/sh.local
 #COPY enablescl.sh /etc/profile.d/enablescl.sh
 
 # Make sure we're started
