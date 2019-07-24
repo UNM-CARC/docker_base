@@ -15,4 +15,5 @@ RUN echo "source scl_source enable rh-python36" >> /etc/profile.d/sh.local
 
 ENV PATH="/usr/lib64/openmpi3/bin:${PATH}"
 # Make sure we're started
-ENTRYPOINT ["module", "add", "mpi/openmpi3-x86_64"]
+# ENTRYPOINT ["module", "add", "mpi/openmpi3-x86_64"]
+ENTRYPOINT ["/bin/echo", "Base Image"]
