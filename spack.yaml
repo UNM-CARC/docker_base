@@ -1,4 +1,4 @@
 spack:
   specs:
-    - openmpi @3.1.4
+    - openmpi @3.1.1
     - openspeedshop @2.4.1
