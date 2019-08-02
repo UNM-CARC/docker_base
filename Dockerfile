@@ -1,7 +1,7 @@
 FROM spack/centos:7
 # Basic MPI development tools and modules for making it available
-RUN yum -y install libgfortran gsl-devel gmp-devel zsh openssl-devel perf autoconf ca-certificates coreutils curl environment-modules git python unzip vim 
-# openmpi3-devel 
+RUN yum -y install libgfortran gfortran gsl-devel gmp-devel zsh openssl-devel perf autoconf ca-certificates coreutils curl environment-modules git python unzip vim openssh-server
+# Not using openmpi3-develsince we're trying to get that from spack
 RUN yum -y groupinstall "Development Tools"
 # Install Infiniband goodies needed for CARC systems
 RUN yum -y install dapl dapl-utils ibacm infiniband-diags libibverbs libibverbs-devel libibverbs-utils libmlx4 librdmacm librdmacm-utils mstflint opensm-libs perftest qperf rdma
@@ -18,7 +18,7 @@ RUN yum -y install dapl dapl-utils ibacm infiniband-diags libibverbs libibverbs-
 
 WORKDIR /build
 COPY spack.yaml .
-RUN spack install
+RUN spack install && spack clean -a
 # Make sure we're started
 # ENTRYPOINT ["module", "add", "mpi/openmpi3-x86_64"]
 ENTRYPOINT ["/bin/echo", "Base Image"]
