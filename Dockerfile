@@ -37,7 +37,7 @@ ENV PATH=$PATH:/spack/bin
 
 WORKDIR /build
 COPY spack.yaml .
-RUN spack install && spack clean -a
+#RUN spack install && spack clean -a
 RUN spack compiler find --scope defaults
 # Make sure we're started
 # ENTRYPOINT ["module", "add", "mpi/openmpi3-x86_64"]
