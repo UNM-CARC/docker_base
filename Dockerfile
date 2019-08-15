@@ -16,9 +16,22 @@ RUN yum -y install dapl dapl-utils ibacm infiniband-diags libibverbs libibverbs-
 
 #ENV PATH="/usr/lib64/openmpi3/bin:${PATH}"
 
+#RUN sed -i \
+#      's/$spack\(.*\)/"${GITHUB_WORKSPACE}\/spack\1"/' \
+#      /spack/etc/spack/defaults/config.yaml && \
+#    sed -i \
+#      's/misc_cache: .*/misc_cache: "${GITHUB_WORKSPACE}\/spack\/misc_cache"/' \
+#      /spack/etc/spack/defaults/config.yaml
+
+ENV SPACK_ROOT=/spack
+ENV PATH=$PATH:/spack/bin
+
 WORKDIR /build
 COPY spack.yaml .
 RUN spack install && spack clean -a
+RUN spack compiler find --scope defaults
 # Make sure we're started
 # ENTRYPOINT ["module", "add", "mpi/openmpi3-x86_64"]
-ENTRYPOINT ["/bin/echo", "Base Image"]
+#ENTRYPOINT ["/bin/bash", "Base Image"]
+ADD entrypoint.sh /
+ENTRYPOINT ["/entrypoint.sh"]
