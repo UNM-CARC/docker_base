@@ -19,5 +19,6 @@ spack env activate "$SPACK_ENV_PATH"
 
 # add environment view to PATH
 PATH="$PATH:$SPACK_ENV_VIEW/bin"
+module load mpi/openmpi3-x86_64
 
 sh -c "$*"

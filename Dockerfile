@@ -41,7 +41,7 @@ COPY spack.yaml .
 RUN spack compiler find --scope defaults
 # Make sure we're started
 # ENTRYPOINT ["module", "add", "mpi/openmpi3-x86_64"]
-RUN module load mpi/openmpi3-x86_64
+#RUN module load mpi/openmpi3-x86_64
 #RUN module load openspeedshop
 #ENTRYPOINT ["/bin/bash", "Base Image"]
 ADD entrypoint.sh /
