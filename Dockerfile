@@ -6,8 +6,19 @@ RUN yum -y groupinstall "Development Tools"
 # Install Infiniband goodies needed for CARC systems
 RUN yum -y install dapl dapl-utils ibacm infiniband-diags libibverbs libibverbs-devel libibverbs-utils libmlx4 librdmacm librdmacm-utils mstflint opensm-libs perftest qperf rdma
 
+# For each layer, we make a directory with the spack stuff we want in it. This base
+# just hase openmpi
+RUN mkdir /build/base
+WORKDIR /build/base
 COPY spack.yaml .
 RUN spack install && spack clean -a
 
-# Make sure we're started
-# Getting rid of the entrypoint and using the default one from spack. Need to look what that entrypoint does...
+# These are copied from the base spack Dockerfile to get things set up properly
+WORKDIR /root
+SHELL ["/bin/bash", "-l", "-c"]
+
+# TODO: add a command to Spack that (re)creates the package cache
+# RUN spack spec hdf5+mpi
+#
+ENTRYPOINT ["/bin/bash", "/opt/spack/share/spack/docker/entrypoint.bash"]
+CMD ["docker-shell"]
