@@ -8,7 +8,7 @@ RUN yum -y install dapl dapl-utils ibacm infiniband-diags libibverbs libibverbs-
 
 # For each layer, we make a directory with the spack stuff we want in it. This base
 # just hase openmpi
-RUN mkdir /build/base
+RUN mkdir -p /build/base
 WORKDIR /build/base
 COPY spack.yaml .
 RUN spack install && spack clean -a
