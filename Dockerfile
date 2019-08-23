@@ -15,10 +15,11 @@ RUN spack install && spack clean -a
 
 # These are copied from the base spack Dockerfile to get things set up properly
 WORKDIR /root
+COPY commands.sh .
 SHELL ["/bin/bash", "-l", "-c"]
 
 # TODO: add a command to Spack that (re)creates the package cache
 # RUN spack spec hdf5+mpi
 #
-ENTRYPOINT ["/bin/bash", "/opt/spack/share/spack/docker/entrypoint.bash"]
-CMD ["docker-shell"]
+ENTRYPOINT ["/bin/bash", "/root/commands.sh"]
+# CMD ["docker-shell"]

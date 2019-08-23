@@ -1,8 +1,10 @@
-#!/bin/bash bash
+#!/bin/bash
 set -e
 
-# load bash integration
-source "/spack/share/spack/setup-env.sh"
+# We choose *not* to run as a login shell to always avoid the commands
+. /etc/profile.d/00-modulefiles.sh
+. /etc/profile.d/spack.sh
+. /etc/profile.d/z00-lmod.sh
 
 # set env and view paths
 # SPACK_ENV_PATH="$GITHUB_WORKSPACE/spack/env"
@@ -19,6 +21,5 @@ source "/spack/share/spack/setup-env.sh"
 
 # add environment view to PATH
 #PATH="$PATH:$SPACK_ENV_VIEW/bin"
-spack load openmpi
-
+module load openmpi-3.1.4-gcc-4.8.5-2e57mrc
 exec "$@"
