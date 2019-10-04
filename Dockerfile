@@ -30,5 +30,6 @@ RUN spack install && spack clean -a
 # which runs module commands and then an application.
 WORKDIR /root
 COPY entrypoint.sh .
+RUN ["chmod", "+x", "/root/entrypoint.sh"]
 ENTRYPOINT ["/bin/bash", "-l", "/root/entrypoint.sh"]
 CMD ["/bin/bash"]
