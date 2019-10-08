@@ -28,8 +28,9 @@ RUN spack install && spack clean -a
 # running as a login shell and then execing whatever comes next. In general,
 # containers built on this should just set CMD to a shell script they define
 # which runs module commands and then an application.
-WORKDIR /root
+RUN mkdir -p /home/docker && chmod 777 /home/docker
+WORKDIR /home/docker
 COPY entrypoint.sh .
-RUN ["chmod", "+x", "/root/entrypoint.sh"]
-ENTRYPOINT ["/bin/bash", "-l", "/root/entrypoint.sh"]
+RUN ["chmod", "+x", "/home/docker/entrypoint.sh"]
+ENTRYPOINT ["/bin/bash", "-l", "/home/docker.sh"]
 CMD ["/bin/bash"]
