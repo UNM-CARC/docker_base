@@ -21,6 +21,7 @@ RUN yum -y install dapl dapl-utils ibacm infiniband-diags libibverbs libibverbs-
 # and turns on hierarchical modules
 RUN mkdir -p /build/base
 WORKDIR /build/base
+COPY modules.yaml /opt/spack/etc/spack/modules.yaml
 COPY spack.yaml .
 RUN spack install && spack clean -a
 
@@ -28,7 +29,7 @@ RUN spack install && spack clean -a
 # running as a login shell and then execing whatever comes next. In general,
 # containers built on this should just set CMD to a shell script they define
 # which runs module commands and then an application.
-RUN chmod 777 /home/docker
+RUN chmod 777 /root
 WORKDIR /root
 COPY entrypoint.sh .
 RUN ["chmod", "+x", "/root/entrypoint.sh"]
