@@ -32,5 +32,5 @@ RUN mkdir -p /home/docker && chmod 777 /home/docker
 WORKDIR /home/docker
 COPY entrypoint.sh .
 RUN ["chmod", "+x", "/home/docker/entrypoint.sh"]
-ENTRYPOINT ["/bin/bash", "-l", "/home/docker.sh"]
+ENTRYPOINT ["/bin/bash", "-l", "/home/docker/entrypoint.sh"]
 CMD ["/bin/bash"]
