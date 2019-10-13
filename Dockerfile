@@ -13,12 +13,14 @@
 # 4. spack env view regenerate /usr/local to rebuild the view of that
 #    environment in /usr/local
 #
-# The general expectataion is that this container and ones layered on top of it
+# The general expectation is that this container and ones layered on top of it
 # will be run using Singularity with a cleaned environment and a contained 
 # file systems (e.g. singularity run -eC container.sif). The Singularity command
-# in this case has to binding and map in the appropriate environment variables,
-# directories and files. Please look at README.md # for more inforamation on 
-# what's required of the launcher of these containers in that scenario. 
+# is responsible for binding in the appropriate environment variables, 
+# directories, and files to make this work. I'm currently working on a 
+# script to make this easy on CARC systems. README.md has (or will have)
+#  more inforamation on what's required of the launcher of these containers 
+# in that scenario. 
 
 FROM spack/centos7
 
