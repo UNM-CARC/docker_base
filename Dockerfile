@@ -15,23 +15,38 @@ RUN yum -y groupinstall "Development Tools"
 # Install Infiniband goodies needed for CARC systems
 RUN yum -y install dapl dapl-utils ibacm infiniband-diags libibverbs libibverbs-devel libibverbs-utils libmlx4 librdmacm librdmacm-utils mstflint opensm-libs perftest qperf rdma
 
-# Setup the CARC spack configuration used by containers. This should include 
-# core compilers, job launch, and network fabric parts for CARC systems.
-# For now, the spack.yaml just uses gcc-4.8.5 from core CentOS and Openmpi
-# and turns on hierarchical modules
-RUN mkdir -p /build/base
-WORKDIR /build/base
-COPY modules.yaml /opt/spack/etc/spack/modules.yaml
-COPY spack.yaml .
-RUN spack install && spack clean -a
+# TODO - we should move some of these to spack, and those that aren't from spack should be whitelisted in the
+# packages.yaml
+
+# Set up our general spack build setup for this system in /etc/spack/
+RUN mkdir -p /etc/spack
+RUN chmod 755 /etc/spack
+COPY packages.yaml /etc/spack/
+
+# And then create an environment in which we will run, and will use spack environments
+# to make packages visibile to user programs. The specific packages we will use are
+# listed in spack.yaml. Further layers will just go to just go
+# to /build and "spack add" additional things they want build and then 
+# rerun spack install in that environment. In addition, we can use different environments
+# for different CARC systems in the same container if we want.
+RUN spack compiler find \
+    && mkdir /build
+COPY spack-wheeler.yaml /build/
+RUN spack env create wheeler && spack cd -e wheeler \
+    && cp /build/spack-wheeler.yaml ./spack.yaml
+RUN spack env activate wheeler \
+    && spack concretize \
+    && spack install \
+    && spack clean -a
 
 # Set up the base entrypoint that gets the default environmnet working by
 # running as a login shell and then execing whatever comes next. In general,
 # containers built on this should just set CMD to a shell script they define
-# which runs module commands and then an application.
-RUN chmod 777 /root
-WORKDIR /root
+# which runs the an application, because their environment will be setup by
+# the spack env actviate command they're using.
+RUN mkdir /home/docker && chmod 777 /home/docker
+WORKDIR /home/docker
 COPY entrypoint.sh .
-RUN ["chmod", "+x", "/root/entrypoint.sh"]
-ENTRYPOINT ["/bin/bash", "-l", "/root/entrypoint.sh"]
+RUN ["chmod", "+x", "/home/docker/entrypoint.sh"]
+ENTRYPOINT ["/bin/bash", "-l", "/home/docker/entrypoint.sh"]
 CMD ["/bin/bash"]
