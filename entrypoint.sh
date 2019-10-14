@@ -21,6 +21,6 @@ if [ "$1" '=' 'docker-shell' ] ; then
         exit 1
     fi
 else
-    exec "$@"
-    exit "$?"
+    /home/docker/commands.sh "$@"
+    exit $?
 fi

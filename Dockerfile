@@ -66,8 +66,8 @@ RUN spack env activate wheeler \
 # which runs the an application.
 RUN mkdir /home/docker && chmod 777 /home/docker
 WORKDIR /home/docker
-COPY entrypoint.sh .
-RUN chmod +x /home/docker/entrypoint.sh
+COPY entrypoint.sh commands.sh ./
+RUN chmod +x /home/docker/entrypoint.sh /home/docker/commands.sh
 
 ENTRYPOINT ["/bin/bash", "-l", "/home/docker/entrypoint.sh"]
 CMD ["docker-shell"]
