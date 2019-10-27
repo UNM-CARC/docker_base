@@ -1,7 +1,7 @@
 #!/bin/bash -l
 
 unset CURRENTLY_BUILDING_DOCKER_IMAGE
-spack env activate wheeler
+spack env activate stampede2
 
 if [ "$1" '=' 'docker-shell' ] ; then
     if [ -t 0 ] ; then

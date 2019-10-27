@@ -48,16 +48,16 @@ COPY packages.yaml /etc/spack/
 # view of that environmet in /usr/local
 RUN spack compiler find \
     && mkdir /build
-COPY spack-wheeler.yaml /build/
-RUN spack env create wheeler && spack cd -e wheeler \
-    && cp /build/spack-wheeler.yaml ./spack.yaml
-RUN spack env activate wheeler \
+COPY spack-stampede1 /build/
+RUN spack env create stampede2 && spack cd -e stampede2 \
+    && cp /build/spack-stampede2 ./spack.yaml
+RUN spack env activate stampede2 \
     && spack concretize \
     && spack install \
     && spack clean -a
 
 # Now make a view of that environment available in /usr/local
-RUN spack env activate wheeler \
+RUN spack env activate stampede2 \
     && spack env view enable /usr/local
 
 # Set up the base entrypoint that gets the default environmnet working by
