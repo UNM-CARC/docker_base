@@ -2,5 +2,6 @@ packages:
   all:
     variants: +mpi
     target: [skylake]
+    compilers: [gcc@7.1.0]
     providers:
-      mpi: [mvapich2]
+      mpi: [intel-mpi]
