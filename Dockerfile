@@ -36,8 +36,8 @@ RUN yum -y groupinstall "Development Tools"
 RUN yum -y install dapl dapl-utils ibacm infiniband-diags libibverbs libibverbs-devel libibverbs-utils libmlx4 librdmacm librdmacm-utils mstflint opensm-libs perftest qperf rdma
 
 # Set up our general spack build setup for this system in /etc/spack/
-RUN mkdir -p /etc/spack
-RUN chmod 755 /etc/spack
+RUN mkdir -p /etc/spack && chmod 777 /etc/spack
+RUN mkdir -p  /home/docker && chmod 777 /home/docker
 COPY packages.yaml /etc/spack/
 
 # And then create an environment in which we will run, and will use spack environments
@@ -54,9 +54,11 @@ RUN spack env create wheeler && spack cd -e wheeler \
 RUN spack env activate wheeler \
     && spack concretize \
     && spack install \
-    && spack clean -a
+    && echo "wheeler" >> /home/docker/environments.txt
 
-# Now make a view of that environment available in /usr/local
+RUN spack clean -a
+
+# Now make a view of the default environment for this center available in /usr/local
 RUN spack env activate wheeler \
     && spack env view enable /usr/local
 
@@ -64,7 +66,6 @@ RUN spack env activate wheeler \
 # running as a login shell and then execing whatever comes next. In general,
 # containers built on this should just set CMD to a shell script they define
 # which runs the an application.
-RUN mkdir /home/docker && chmod 777 /home/docker
 WORKDIR /home/docker
 COPY entrypoint.sh commands.sh ./
 RUN chmod +x /home/docker/entrypoint.sh /home/docker/commands.sh
