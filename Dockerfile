@@ -36,6 +36,7 @@ RUN yum -y groupinstall "Development Tools"
 RUN yum -y install dapl dapl-utils ibacm infiniband-diags libibverbs libibverbs-devel libibverbs-utils libmlx4 librdmacm librdmacm-utils mstflint opensm-libs perftest qperf rdma
 
 # Set up our general spack build setup for this system in /etc/spack/
+RUN mkdir /home/docker && chmod 777 /home/docker
 RUN mkdir -p /etc/spack
 RUN chmod 755 /etc/spack
 COPY packages.yaml /etc/spack/
@@ -46,25 +47,39 @@ COPY packages.yaml /etc/spack/
 # to /build and "spack add" additional things they want build, then 
 # rerun spack install in that environment, and regenerate the 
 # view of that environmet in /usr/local
-RUN spack compiler find \
+RUN spack install gcc@8.2.0
+RUN module load gcc-8.2.0-gcc-4.8.5-q5tss7s \
+    && spack compiler find \
     && mkdir /build
-COPY spack-stampede1 /build/
-RUN spack env create stampede2 && spack cd -e stampede2 \
-    && cp /build/spack-stampede2 ./spack.yaml
-RUN spack env activate stampede2 \
+
+COPY spack-stampede2-skx.yaml spack-stampede2-knl.yaml /build/
+
+# Create an environment for stampede2 skylake
+RUN spack env create stampede2-skx && spack cd -e stampede2-skx \
+    && cp /build/spack-stampede2-skx.yaml ./spack.yaml
+RUN spack env activate stampede2-skx \
     && spack concretize \
-    && spack install \
-    && spack clean -a
+    && spack install
+RUN echo "stampede2-skx" >> /home/docker/environments.txt
+
+# Create an environment for stampede2 knl
+RUN spack env create stampede2-knl && spack cd -e stampede2-knl \
+    && cp /build/spack-stampede2-knl.yaml ./spack.yaml
+RUN spack env activate stampede2-knl \
+    && spack concretize \
+    && spack install 
+RUN echo "stampede2-knl" >> /home/docker/environments.txt
+
+RUN spack clean -a
 
 # Now make a view of that environment available in /usr/local
-RUN spack env activate stampede2 \
+RUN spack env activate stampede2-skx \
     && spack env view enable /usr/local
 
 # Set up the base entrypoint that gets the default environmnet working by
 # running as a login shell and then execing whatever comes next. In general,
 # containers built on this should just set CMD to a shell script they define
 # which runs the an application.
-RUN mkdir /home/docker && chmod 777 /home/docker
 WORKDIR /home/docker
 COPY entrypoint.sh commands.sh ./
 RUN chmod +x /home/docker/entrypoint.sh /home/docker/commands.sh

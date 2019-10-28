@@ -5,10 +5,16 @@
 
 spack:
   specs: 
-    - openmpi
+    - mvapich2 fabrics=mrail
   mirrors: {}
   modules:
     enable: []
   repos: []
-  packages: {}
+  packages:
+    openssl:
+      buildable: false
+      paths: 
+        openssl@1.0.2: /usr
+    all:
+      target: [knl]
   config: {}
