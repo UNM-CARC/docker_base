@@ -22,53 +22,51 @@
 #  more inforamation on what's required of the launcher of these containers 
 # in that scenario. 
 
-FROM spack/centos7
+FROM spack/centos7 AS builder
 
 # Because we use spack and a cleaned environment, the run commands here
 # need to be login shells to get the appropriate spack initialiation.
 SHELL ["/bin/bash", "-l", "-c"]
 
-# Basic MPI development tools and modules for making it available
-RUN yum -y install libgfortran gfortran gsl-devel gmp-devel zsh openssl-devel perf autoconf ca-certificates coreutils curl environment-modules git python unzip vim openssh-server
-# Not using openmpi3-develsince we're trying to get that from spack
-RUN yum -y groupinstall "Development Tools"
-# Install Infiniband goodies needed for CARC systems
-RUN yum -y install dapl dapl-utils ibacm infiniband-diags libibverbs libibverbs-devel libibverbs-utils libmlx4 librdmacm librdmacm-utils mstflint opensm-libs perftest qperf rdma
+RUN yum -y install centos-release-scl openssl-devel
+RUN yum -y install devtoolset-8-gcc devtoolset-8-gcc-c++ devtoolset-8-gcc-gfortran
+RUN scl enable devtoolset-8 'spack compiler find --scope system'
 
-# Set up our general spack build setup for this system in /etc/spack/
-RUN mkdir -p /etc/spack && chmod 777 /etc/spack
-RUN mkdir -p  /home/docker && chmod 777 /home/docker
+# We put our general spack build setup for this system in /etc/spack/ and 
+# specific build information into environments, not ~/.spack because /root
+# may not be available in singularity containers
+RUN mkdir -p /etc/spack 
+RUN chmod 755 /etc/spack
 COPY packages.yaml /etc/spack/
 
-# And then create an environment in which we will run, and will use spack environments
-# to make packages visibile to user programs. The specific packages we will use are
-# listed in spack.yaml. Further layers will just go to just go
-# to /build and "spack add" additional things they want build, then 
-# rerun spack install in that environment, and regenerate the 
-# view of that environmet in /usr/local
-RUN spack compiler find \
-    && mkdir /build
-COPY spack-wheeler.yaml /build/
-RUN spack env create wheeler && spack cd -e wheeler \
-    && cp /build/spack-wheeler.yaml ./spack.yaml
-RUN spack env activate wheeler \
-    && spack concretize \
-    && spack install \
-    && echo "wheeler" >> /home/docker/environments.txt
+# We do most of our work in /home/docker for the same reason. This just 
+# sets up the base environment in which we can build more sophisticated
+# containers
+RUN mkdir /home/docker
+RUN chmod 777 /home/docker 
+COPY spack.yaml /home/docker/spack.yaml
+WORKDIR /home/docker
+RUN spack install \
+    && spack compiler find \
+    && spack clean -a 
+RUN cd /usr/local/bin && strip -s * || exit 0
+RUN cd /usr/local/lib && strip -s * || exit 0
 
-RUN spack clean -a
+FROM spack/centos7 
+SHELL ["/bin/bash", "-l", "-c"]
+RUN yum -y install centos-release-scl openssl-devel
+RUN yum -y install devtoolset-8-gcc devtoolset-8-gcc-c++ devtoolset-8-gcc-gfortran
+COPY --from=builder /opt/software /opt/software
+COPY --from=builder /home/docker /home/docker
+COPY --from=builder /etc/spack /etc/spack
+COPY --from=builder /usr/local /usr/local
 
-# Now make a view of the default environment for this center available in /usr/local
-RUN spack env activate wheeler \
-    && spack env view enable /usr/local
-
-# Set up the base entrypoint that gets the default environmnet working by
-# running as a login shell and then execing whatever comes next. In general,
-# containers built on this should just set CMD to a shell script they define
-# which runs the an application.
 WORKDIR /home/docker
 COPY entrypoint.sh commands.sh ./
 RUN chmod +x /home/docker/entrypoint.sh /home/docker/commands.sh
+
+ENV PATH=/usr/local/bin:${PATH}
+ENV LD_LIBRARY_PATH=/usr/local/lib:${PATH}
 
 ENTRYPOINT ["/bin/bash", "-l", "/home/docker/entrypoint.sh"]
 CMD ["docker-shell"]

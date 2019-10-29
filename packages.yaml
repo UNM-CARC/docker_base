@@ -1,9 +1,6 @@
 packages:
   all:
-    variants: +mpi
-    target: [nehalem]
     providers:
-      mpi: [openmpi]
       libtool: [libtool@2.4.2]
 
   tar:
@@ -35,7 +32,3 @@ packages:
     buildable: false
     paths:
       openssl@1.0.2: /usr
-
-  openmpi:
-    variants: [+thread_multiple fabrics=ucx]
-
