@@ -1,0 +1,27 @@
+# This is a Spack Environment file.
+#
+# It describes a set of packages to be installed, along with
+# configuration settings.
+
+spack:
+  mirrors: {}
+  modules:
+    enable: []
+  repos: []
+  packages:
+    all:
+      variants: [+mpi]
+      compiler: [gcc@8.3.1]
+      providers:
+        mpi: [mvapich2%gcc@8.2.0]
+#   target: [knl]    # Ideally we would do this, but spack doesn't yet
+                       # cross-build correctly and so some of the tools 
+                       # it builds would fail
+  config:
+    install_tree: /opt/software
+  specs: 
+    - mvapich2 fabrics=mrail
+  view:
+    default:
+      root: /usr/local
+  concretization: together

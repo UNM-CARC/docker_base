@@ -1,9 +1,6 @@
 packages:
   all:
-    variants: +mpi
-    compiler: [gcc@8.2.0]
     providers:
-      mpi: [mvapich2]
       libtool: [libtool@2.4.2]
 
   tar:
@@ -30,3 +27,8 @@ packages:
     buildable: false
     paths:
       bzip2@1.0.6: /usr
+
+  openssl:
+    buildable: false
+    paths:
+      openssl@1.0.2: /usr
