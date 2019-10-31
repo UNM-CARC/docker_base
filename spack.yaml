@@ -13,7 +13,7 @@ spack:
       variants: [+mpi]
       compiler: [gcc@8.3.1]
       providers:
-        mpi: [mvapich2%gcc@8.2.0]
+        mpi: [mvapich2]
 #   target: [knl]    # Ideally we would do this, but spack doesn't yet
                        # cross-build correctly and so some of the tools 
                        # it builds would fail
