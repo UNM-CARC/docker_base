@@ -27,7 +27,7 @@ packages:
     buildable: false
     paths:
       bzip2@1.0.6: /usr
-
+  
   openssl:
     buildable: false
     paths:

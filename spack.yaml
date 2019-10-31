@@ -12,16 +12,20 @@ spack:
     all:
       variants: [+mpi]
       compiler: [gcc@8.3.1]
+      target: [haswell]  # Ideally his would be knl or skylake-avx512 
+                         # but spack doesn't yet cross-build correctly 
+                         # and so some of the tools it builds would fail
+                         # if we used that.
       providers:
         mpi: [mvapich2]
-    target: [haswell]  # Ideally his would be knl or skylake-avx512 
-                       # but spack doesn't yet cross-build correctly 
-                       # and so some of the tools it builds would fail
-                       # if we used that.
+    openmpi:
+      variants: [+thread_multiple fabrics=ucx]
+    mvapich2:
+      variants: [fabrics=mrail]
   config:
     install_tree: /opt/software
   specs: 
-    - mvapich2 fabrics=mrail
+    - mvapich2
   view:
     default:
       root: /usr/local
