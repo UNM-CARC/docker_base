@@ -14,7 +14,7 @@ spack:
       compiler: [gcc@8.3.1]
       providers:
         mpi: [openmpi]
-      target: [nehalem]
+      target: [x86_64]
     openmpi:
       variants: [+thread_multiple fabrics=ucx]
   config:
