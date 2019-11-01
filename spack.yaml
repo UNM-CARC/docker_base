@@ -12,10 +12,11 @@ spack:
     all:
       variants: [+mpi]
       compiler: [gcc@8.3.1]
-      target: [haswell]  # Ideally his would be knl or skylake-avx512 
+      target: [ivybridge]  # Ideally his would be knl or skylake-avx512 
                          # but spack doesn't yet cross-build correctly 
                          # and so some of the tools it builds would fail
-                         # if we used that.
+                         # if we used that. ivybridge is still old enough that
+                         # remote builders will work with it.
       providers:
         mpi: [mvapich2]
     openmpi:
