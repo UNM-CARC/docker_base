@@ -1,6 +1,8 @@
 #!/bin/bash -l
 
 unset CURRENTLY_BUILDING_DOCKER_IMAGE
+export LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
+export PATH=/usr/local/bin:${PATH}
 
 if [ "$1" '=' 'docker-shell' ] ; then
     if [ -t 0 ] ; then
