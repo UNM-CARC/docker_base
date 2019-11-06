@@ -66,7 +66,7 @@ COPY entrypoint.sh commands.sh ./
 RUN chmod +x /home/docker/entrypoint.sh /home/docker/commands.sh
 
 ENV PATH=/usr/local/bin:${PATH}
-ENV LD_LIBRARY_PATH=/usr/local/lib:${PATH}
+ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 
 ENTRYPOINT ["/bin/bash", "-l", "/home/docker/entrypoint.sh"]
 CMD ["docker-shell"]
