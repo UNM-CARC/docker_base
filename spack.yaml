@@ -9,18 +9,21 @@ spack:
     enable: []
   repos: []
   packages:
+    openmpi:
+      variants: [+thread_multiple fabrics=ucx]
+    singularity:
+      version: [3.2.1]
     all:
       variants: [+mpi]
       compiler: [gcc@8.3.1]
       providers:
         mpi: [openmpi]
       target: [nehalem]
-    openmpi:
-      variants: [+thread_multiple fabrics=ucx]
   config:
     install_tree: /opt/software
   specs: 
     - openmpi
+    - singularity
   view:
     default:
       root: /usr/local
