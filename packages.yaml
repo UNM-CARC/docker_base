@@ -8,11 +8,6 @@ packages:
     paths:
       tar@1.26: /usr
 
-  python:
-    buildable: false
-    paths:
-      python@2.7.5: /usr
-
   patch:
     buildable: false
     paths:
