@@ -60,13 +60,3 @@ COPY --from=builder /opt/software /opt/software
 COPY --from=builder /home/docker /home/docker
 COPY --from=builder /etc/spack /etc/spack
 COPY --from=builder /usr/local /usr/local
-
-WORKDIR /home/docker
-COPY entrypoint.sh commands.sh ./
-RUN chmod +x /home/docker/entrypoint.sh /home/docker/commands.sh
-
-ENV PATH=/usr/local/bin:${PATH}
-ENV LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
-
-ENTRYPOINT ["/bin/bash", "-l", "/home/docker/entrypoint.sh"]
-CMD ["docker-shell"]
