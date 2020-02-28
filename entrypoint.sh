@@ -2,7 +2,7 @@
 
 unset CURRENTLY_BUILDING_DOCKER_IMAGE
 
-if [ "$1" '=' 'docker-shell' ] ; then
+if [ "$1" '=' 'shell' ] ; then
     if [ -t 0 ] ; then
         exec bash -il
     else
