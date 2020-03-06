@@ -16,7 +16,7 @@ spack:
         mpi: [openmpi]
       target: [x86_64]
     openmpi:
-      variants: [+thread_multiple fabrics=ucx]
+      variants: [+thread_multiple fabrics=ucx schedulers=slurm +pmi]
   config:
     install_tree: /opt/software
   specs: 
