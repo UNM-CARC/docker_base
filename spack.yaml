@@ -22,7 +22,7 @@ spack:
     openmpi:
       variants: [+thread_multiple fabrics=ucx]
     mvapich2:
-      variants: [fabrics=mrail]
+      variants: [fabrics=psm2]
   config:
     install_tree: /opt/software
   specs: 
