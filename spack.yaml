@@ -21,6 +21,7 @@ spack:
     install_tree: /opt/software
   specs: 
     - openmpi
+    - gettext
   view:
     default:
       root: /usr/local
